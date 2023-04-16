@@ -3,11 +3,13 @@ import dotenv from 'dotenv';
 import { dbConnect } from './utils/dbConnect.js';
 import mongoose from 'mongoose';
 import 'express-async-errors';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 import courseRoute from './view/courseRoute.js';
 import authRoute from './view/authRoute.js';
