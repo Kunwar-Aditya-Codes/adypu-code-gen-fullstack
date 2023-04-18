@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.jpg';
 
 const Home = () => {
-
-
   return (
     <div className='glassmorph shadow-md w-full lg:w-[65%] space-y-4 flex flex-col items-center  mx-auto rounded-md p-4'>
       <div className='bg-white rounded-md p-1 w-full '>
@@ -32,7 +30,7 @@ const Home = () => {
         </p>
       </div>
 
-      <Link to='/login'>
+      <Link to='/student'>
         <button className='bg-white/70 uppercase tracking-widest font-medium px-8 py-3 hover:bg-[#901464] transition ease-out duration-[250ms] hover:text-white text-lg text-center rounded-md'>
           Login
         </button>

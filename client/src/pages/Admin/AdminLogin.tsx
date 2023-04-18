@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.jpg';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -7,6 +7,8 @@ import axios from '../../api/axios';
 const AdminLogin = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +42,10 @@ const AdminLogin = () => {
           password,
         },
       });
+
+      if (response?.status === 200) {
+        navigate('/admin/dashboard');
+      }
 
       toast.success('Success', {
         id: 'admin',
