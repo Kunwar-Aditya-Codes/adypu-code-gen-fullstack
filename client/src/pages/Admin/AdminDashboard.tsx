@@ -1,21 +1,33 @@
 import CourseTable from '../../components/CourseTable';
 import { fetchCourses } from '../../api/queries';
 import { useQuery } from '@tanstack/react-query';
+import { PowerIcon } from '@heroicons/react/24/solid';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['todos'],
+    queryKey: ['courses'],
     queryFn: fetchCourses,
   });
 
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    navigate('/admin');
+  };
+
   return (
     <div className='glassmorph p-2 h-full w-full'>
-      <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] rounded-md p-2'>
-        <button
-          type='submit'
-          className='bg-[#e6e6e6] py-2 px-4 font-medium rounded-md text-sm uppercase tracking-widest outline-none'
-        >
+      <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] flex items-center justify-between rounded-md p-2'>
+        <button className='bg-white/50 transition ease-out hover:bg-[#e6e6e6] py-2 px-4 font-medium rounded-md text-sm uppercase tracking-widest outline-none'>
           New Code
+        </button>
+
+        <button
+          onClick={logout}
+          className='bg-white/50 transition ease-out hover:bg-[#e6e6e6] p-2 rounded-full'
+        >
+          <PowerIcon className='h-5 w-5' />
         </button>
       </div>
 
