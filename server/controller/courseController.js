@@ -41,12 +41,21 @@ export const getAllCourses = async (req, res) => {
 // @route   GET /api/v1/courses/search
 // @access  Public
 export const searchCourse = async (req, res) => {
-  const courses = await Course.find(req.query).lean().exec();
+  const { subject } = req.query;
 
-  if (!courses) {
-    return res.status(400).json({ msg: 'No courses found' });
+  if (!subject) {
+    return res.status(400).json({ msg: 'Please enter all fields' });
   }
 
-  res.status(200).json({ courses });
-};
+  const course = await Course.find({
+    subject: { $regex: subject, $options: 'i' },
+  })
+    .lean()
+    .exec();
 
+  if (!course) {
+    return res.status(203);
+  }
+
+  res.status(200).json({ course });
+};

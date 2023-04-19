@@ -3,6 +3,7 @@ import { fetchCourses } from '../../api/queries';
 import { useQuery } from '@tanstack/react-query';
 import { PowerIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
+import AddModal from '../../components/AddModal';
 
 const AdminDashboard = () => {
   const { isLoading, isError, data } = useQuery({
@@ -19,9 +20,12 @@ const AdminDashboard = () => {
   return (
     <div className='glassmorph p-2 h-full w-full'>
       <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] flex items-center justify-between rounded-md p-2'>
-        <button className='bg-white/50 transition ease-out hover:bg-[#e6e6e6] py-2 px-4 font-medium rounded-md text-sm uppercase tracking-widest outline-none'>
-          New Code
-        </button>
+        <label
+          htmlFor='my-modal-3'
+          className='bg-white/50 cursor-pointer transition ease-out hover:bg-[#e6e6e6] py-2 px-4 font-medium rounded-md text-sm uppercase tracking-widest outline-none'
+        >
+          New Course
+        </label>
 
         <button
           onClick={logout}
@@ -38,6 +42,8 @@ const AdminDashboard = () => {
       ) : (
         <CourseTable courses={data?.courses} />
       )}
+
+      <AddModal />
     </div>
   );
 };
