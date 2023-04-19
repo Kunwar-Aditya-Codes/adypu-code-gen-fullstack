@@ -2,23 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { searchCourses } from '../api/queries';
+import { initials, semester } from '../utils/data';
 
-type Props = {};
-
-const AddModal = (props: Props) => {
+const AddModal = ({ course }: any) => {
   const [inputData, setInputData] = useState({
     branch: '',
     year: '',
+    program: '',
     semester: '',
     subject: '',
     code: '',
   });
 
-  const [error, setError] = useState('');
-
   const [debouncedInputData] = useDebounce(inputData.subject, 750);
 
-  const { data, isLoading } = useQuery(
+  const { data } = useQuery(
     ['searchCourses', debouncedInputData],
     () => searchCourses(debouncedInputData),
     {
@@ -37,6 +35,36 @@ const AddModal = (props: Props) => {
 
   const subjectExistsInDB = data?.course?.length > 0;
 
+  const generateCode = () => {
+    const { branch, year } = inputData;
+    let code: string;
+    const branchInitials = initials.find((i) => branch === i.name)?.initial;
+
+    const filteredData = course?.filter((course: any) =>
+      course.code.includes(branchInitials + year)
+    );
+
+    const codeInDb =
+      filteredData.length > 0 && filteredData.map((course: any) => course.code);
+
+    const lastCode = codeInDb && codeInDb[codeInDb.length - 1];
+
+    if (lastCode === false) {
+      code = `${branchInitials}${year}00E`;
+    } else {
+      const num = parseInt(lastCode.slice(3, 5)) + 1;
+      let numWithZeroes = num.toString();
+      if (numWithZeroes.length > 1) {
+        code = `${branchInitials}${year}${numWithZeroes}E`;
+      } else {
+        numWithZeroes = numWithZeroes.padStart(2, '0');
+        code = `${branchInitials}${year}${numWithZeroes}E`;
+      }
+    }
+
+    setInputData((prev) => ({ ...prev, code }));
+  };
+
   return (
     <div>
       <input type='checkbox' id='my-modal-3' className='modal-toggle' />
@@ -52,24 +80,36 @@ const AddModal = (props: Props) => {
           <form className='mt-8 space-y-6'>
             <select
               onChange={handleInputChange}
+              name='program'
+              value={inputData.program || 'selected'}
+              className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
+            >
+              <option disabled value='selected'>
+                Select Program
+              </option>
+              <option value='B.Tech'>B.Tech</option>
+              <option value='M.Tech'>M.Tech</option>
+            </select>
+
+            <select
+              onChange={handleInputChange}
               name='branch'
-              value={inputData.branch}
+              value={inputData.branch || 'selected'}
               className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
             >
               <option disabled value='selected'>
                 Select Branch
               </option>
-              <option value='CSE'>CSE</option>
-              <option value='ECE'>ECE</option>
-              <option value='EEE'>EEE</option>
-              <option value='MECH'>MECH</option>
-              <option value='CIVIL'>CIVIL</option>
-              <option value='IT'>IT</option>
+              {initials.map((opt) => (
+                <option key={opt.name} value={opt.name}>
+                  {opt.name}
+                </option>
+              ))}
             </select>
             <select
               onChange={handleInputChange}
               name='year'
-              value={inputData.year}
+              value={inputData.year || 'selected'}
               className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
             >
               <option disabled value='selected'>
@@ -83,20 +123,17 @@ const AddModal = (props: Props) => {
             <select
               onChange={handleInputChange}
               name='semester'
-              value={inputData.semester}
+              value={inputData.semester || 'selected'}
               className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
             >
               <option disabled value='selected'>
                 Select Semester
               </option>
-              <option value='1'>1</option>
-              <option value='2'>2</option>
-              <option value='3'>3</option>
-              <option value='4'>4</option>
-              <option value='5'>5</option>
-              <option value='6'>6</option>
-              <option value='7'>7</option>
-              <option value='8'>8</option>
+              {semester.map((sem) => (
+                <option key={sem} value={sem}>
+                  {sem}
+                </option>
+              ))}
             </select>
             <div className='flex flex-col'>
               <input
@@ -126,6 +163,8 @@ const AddModal = (props: Props) => {
                 className='input flex-[0.7] cursor-not-allowed input-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
               />
               <button
+                type='button'
+                onClick={generateCode}
                 disabled={subjectExistsInDB}
                 className='btn flex-[0.3] rounded-md w-full bg-[#b5197e] border-none'
               >

@@ -43,7 +43,7 @@ const AdminDashboard = () => {
         <CourseTable courses={data?.courses} />
       )}
 
-      <AddModal />
+      <AddModal course={data?.courses} />
     </div>
   );
 };

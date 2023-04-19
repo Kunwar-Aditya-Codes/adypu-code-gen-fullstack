@@ -6,11 +6,15 @@ const courseSchema = new mongoose.Schema({
   },
 
   year: {
-    type: Number,
+    type: String,
+  },
+
+  program: {
+    type: String,
   },
 
   semester: {
-    type: Number,
+    type: String,
   },
 
   subject: {

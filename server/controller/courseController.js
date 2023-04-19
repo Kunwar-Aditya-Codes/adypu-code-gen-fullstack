@@ -4,9 +4,9 @@ import Course from '../model/Course.js';
 // @route   POST /api/v1/courses
 // @access  Private - Admin
 export const createCourse = async (req, res) => {
-  const { branch, year, semester, subject, code } = req.body;
+  const { branch, year, semester, subject, code, program } = req.body;
 
-  if (!branch || !year || !semester || !subject || !code) {
+  if (!branch || !year || !semester || !subject || !code || !program) {
     return res.status(400).json({ msg: 'Please enter all fields' });
   }
 
@@ -21,6 +21,7 @@ export const createCourse = async (req, res) => {
     year,
     semester,
     subject,
+    program,
     code,
   });
 
