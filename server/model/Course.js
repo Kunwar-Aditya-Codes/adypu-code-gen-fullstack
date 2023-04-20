@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
   branch: {
@@ -26,4 +26,4 @@ const courseSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model('course', courseSchema);
+module.exports = mongoose.model('course', courseSchema);

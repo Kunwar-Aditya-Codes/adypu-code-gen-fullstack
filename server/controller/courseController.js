@@ -1,9 +1,9 @@
-import Course from '../model/Course.js';
+const Course = require('../model/Course');
 
 // @desc    Create a course
 // @route   POST /api/v1/courses
 // @access  Private - Admin
-export const createCourse = async (req, res) => {
+exports.createCourse = async (req, res) => {
   const { branch, year, semester, subject, code, program } = req.body;
 
   if (!branch || !year || !semester || !subject || !code || !program) {
@@ -33,7 +33,7 @@ export const createCourse = async (req, res) => {
 // @desc    Get all courses
 // @route   GET /api/v1/courses
 // @access  Public
-export const getAllCourses = async (req, res) => {
+exports.getAllCourses = async (req, res) => {
   const courses = await Course.find().lean().exec();
   res.status(200).json({ courses });
 };
@@ -41,7 +41,7 @@ export const getAllCourses = async (req, res) => {
 // @desc    Search for a course
 // @route   GET /api/v1/courses/search
 // @access  Public
-export const searchCourse = async (req, res) => {
+exports.searchCourse = async (req, res) => {
   const { subject } = req.query;
 
   if (!subject) {

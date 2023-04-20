@@ -1,9 +1,9 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   createCourse,
   getAllCourses,
   searchCourse,
-} from '../controller/courseController.js';
+} = require('../controller/courseController');
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.route('/fetch').get(getAllCourses);
 
 router.route('/search').get(searchCourse);
 
-export default router;
+module.exports = router;

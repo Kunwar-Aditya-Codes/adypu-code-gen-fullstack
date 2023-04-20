@@ -1,29 +1,27 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { dbConnect } from './utils/dbConnect.js';
-import mongoose from 'mongoose';
-import 'express-async-errors';
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+require('dotenv').config();
+require('express-async-errors');
 // import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-dotenv.config();
+const courseRoute = require('./view/courseRoute');
+const authRoute = require('./view/authRoute');
+const dbConnect = require('./utils/dbConnect');
 
 const app = express();
 app.use(express.json());
 // app.use(cors());
-
-import courseRoute from './view/courseRoute.js';
-import authRoute from './view/authRoute.js';
 
 dbConnect();
 
 app.use('/api/v1/courses', courseRoute);
 app.use('/api/v1/auth', authRoute);
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+__dirname = path.resolve();
 
 app.use(express.static(path.join(__dirname, 'client/dist')));
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
 });

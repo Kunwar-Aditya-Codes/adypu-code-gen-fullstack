@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
 // @desc    AdminLogin
 // @route   POST /api/v1/auth/admin/login
 // @access  Private
-export const adminLogin = async (req, res) => {
+exports.adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -32,12 +32,12 @@ export const adminLogin = async (req, res) => {
 // @desc    UserLogin
 // @route   POST /api/v1/auth/login
 // @access  Public
-export const userLogin = async (req, res) => {};
+exports.userLogin = async (req, res) => {};
 
 // @desc    Logout
 // @route   GET /api/v1/auth/logout
 // @access  Public
-export const logout = async (req, res) => {
+exports.logout = async (req, res) => {
   res.clearCookie();
 
   return res.sendStatus(203);
