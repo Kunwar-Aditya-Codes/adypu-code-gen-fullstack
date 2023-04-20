@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import 'express-async-errors';
 // import cors from 'cors';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 import courseRoute from './view/courseRoute.js';
 import authRoute from './view/authRoute.js';
+import { fileURLToPath } from 'url';
 
 dbConnect();
 
@@ -24,7 +26,7 @@ app.get('/', function (req, res) {
 app.use('/api/v1/courses', courseRoute);
 app.use('/api/v1/auth', authRoute);
 
-__dirname = path.resolve();
+const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'client/dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
