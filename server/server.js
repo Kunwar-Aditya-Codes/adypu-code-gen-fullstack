@@ -18,14 +18,11 @@ import authRoute from './view/authRoute.js';
 
 dbConnect();
 
-app.get('/', function (req, res) {
-  res.send('Server up and running');
-});
-
 app.use('/api/v1/courses', courseRoute);
 app.use('/api/v1/auth', authRoute);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 app.use(express.static(path.join(__dirname, 'client/dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
