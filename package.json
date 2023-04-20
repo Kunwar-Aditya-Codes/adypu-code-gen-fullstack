@@ -2,5 +2,9 @@
   "name": "adypu-code-gen",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "cd server && yarn install --ignore-engines && cd ../client && yarn install --ignore-engines && yarn build",
+    "start": "node server/server.js"
+  }
 }
