@@ -15,7 +15,6 @@ app.use(express.json());
 
 import courseRoute from './view/courseRoute.js';
 import authRoute from './view/authRoute.js';
-import { fileURLToPath } from 'url';
 
 dbConnect();
 
