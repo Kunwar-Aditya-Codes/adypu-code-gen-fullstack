@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
-import { searchCourses } from '../api/queries';
+// import { useQuery } from '@tanstack/react-query';
+// import { useDebounce } from 'use-debounce';
+// import { searchCourses } from '../api/queries';
+import { useEffect, useState } from 'react';
 import { initials, semester } from '../utils/data';
 
 const AddModal = ({ course }: any) => {
@@ -14,16 +14,19 @@ const AddModal = ({ course }: any) => {
     code: '',
   });
 
-  const [debouncedInputData] = useDebounce(inputData.subject, 750);
+  const [searchFilteredData, setSearchFilteredData] = useState<any>([]);
 
-  const { data } = useQuery(
-    ['searchCourses', debouncedInputData],
-    () => searchCourses(debouncedInputData),
-    {
-      enabled: debouncedInputData.length > 3,
-    }
-  );
+  // const [debouncedInputData] = useDebounce(inputData.subject, 750);
 
+  // const { data } = useQuery(
+  //   ['searchCourses', debouncedInputData],
+  //   () => searchCourses(debouncedInputData),
+  //   {
+  //     enabled: debouncedInputData.length > 2,
+  //   }
+  // );
+
+  // Handle Input Change
   const handleInputChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -33,9 +36,12 @@ const AddModal = ({ course }: any) => {
     setInputData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const subjectExistsInDB = data?.course?.length > 0;
-
+  // Code Generator
   const generateCode = () => {
+    if (inputData.branch === '' || inputData.year === '') {
+      return;
+    }
+
     const { branch, year } = inputData;
     let code: string;
     const branchInitials = initials.find((i) => branch === i.name)?.initial;
@@ -65,6 +71,26 @@ const AddModal = ({ course }: any) => {
     setInputData((prev) => ({ ...prev, code }));
   };
 
+  //* NEW ADDITION: Filter Data
+  const filterSearchData = () => {
+    const filteredData = course?.filter((course: any) =>
+      course.subject.toLowerCase().includes(inputData.subject.toLowerCase())
+    );
+
+    setSearchFilteredData(filteredData);
+    console.log(filteredData);
+  };
+  useEffect(() => {
+    if (inputData.subject.length > 0) {
+      filterSearchData();
+    } else {
+      setSearchFilteredData([]);
+    }
+  }, [inputData.subject]);
+
+  //! TODO: Handle Submit
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {};
+
   return (
     <div>
       <input type='checkbox' id='my-modal-3' className='modal-toggle' />
@@ -78,6 +104,7 @@ const AddModal = ({ course }: any) => {
           </label>
 
           <form className='mt-8 space-y-6'>
+            {/* Program */}
             <select
               onChange={handleInputChange}
               name='program'
@@ -91,6 +118,7 @@ const AddModal = ({ course }: any) => {
               <option value='M.Tech'>M.Tech</option>
             </select>
 
+            {/* Branch */}
             <select
               onChange={handleInputChange}
               name='branch'
@@ -106,6 +134,8 @@ const AddModal = ({ course }: any) => {
                 </option>
               ))}
             </select>
+
+            {/* Year */}
             <select
               onChange={handleInputChange}
               name='year'
@@ -120,6 +150,8 @@ const AddModal = ({ course }: any) => {
               <option value='3'>3</option>
               <option value='4'>4</option>
             </select>
+
+            {/*  Semester */}
             <select
               onChange={handleInputChange}
               name='semester'
@@ -135,7 +167,9 @@ const AddModal = ({ course }: any) => {
                 </option>
               ))}
             </select>
-            <div className='flex flex-col'>
+
+            {/* Subject */}
+            <div className='flex flex-col relative'>
               <input
                 type='text'
                 onChange={handleInputChange}
@@ -143,17 +177,20 @@ const AddModal = ({ course }: any) => {
                 autoComplete='off'
                 value={inputData.subject}
                 placeholder='Subject Name'
-                className={`input input-bordered rounded-md focus:outline-none border-2 ${
-                  subjectExistsInDB ? 'border-red-500' : 'border-[#b5197e]'
-                } w-full`}
+                className={`input input-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full`}
               />
-              {subjectExistsInDB && (
-                <div className='text-red-500 text-xs'>
-                  Subject already exists in database
+              {searchFilteredData?.length !== 0 && (
+                <div className='bg-[#a0377b] mt-1 absolute w-full top-12 divide-y text-white p-2 rounded-md max-h-[5rem] z-50 overflow-y-auto'>
+                  {searchFilteredData?.map((course: any) => (
+                    <div key={course._id} className=' py-1'>
+                      {course.subject}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
 
+            {/* Code */}
             <div className='flex items-center space-x-2'>
               <input
                 type='text'
@@ -165,7 +202,7 @@ const AddModal = ({ course }: any) => {
               <button
                 type='button'
                 onClick={generateCode}
-                disabled={subjectExistsInDB}
+                disabled={searchFilteredData?.length !== 0}
                 className='btn flex-[0.3] rounded-md w-full bg-[#b5197e] border-none'
               >
                 Generate Code

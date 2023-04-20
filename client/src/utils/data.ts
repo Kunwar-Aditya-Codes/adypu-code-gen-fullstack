@@ -1,5 +1,5 @@
 export const initials = [
-  { name: '3D Printing & Design', initial: 'AI' },
+  { name: '3D Printing & Design', initial: 'DP' },
   { name: 'Artificial Intelligence & Data Science', initial: 'AD' },
   { name: 'Artificial Intelligence & Machine Learning', initial: 'AM' },
   { name: 'Automobile Engineering', initial: 'AE' },

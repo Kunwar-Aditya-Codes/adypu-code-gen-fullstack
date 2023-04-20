@@ -35,6 +35,10 @@ const AdminDashboard = () => {
         </button>
       </div>
 
+      {/* Filter Bar */}
+
+      <div></div>
+
       {isLoading ? (
         <h1>Loading...</h1>
       ) : isError ? (
