@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { dbConnect } from './utils/dbConnect.js';
 import mongoose from 'mongoose';
 import 'express-async-errors';
-import cors from 'cors';
+// import cors from 'cors';
 import path from 'path';
 
 dotenv.config();
