@@ -19,10 +19,10 @@ const AdminDashboard = () => {
 
   return (
     <div className='glassmorph p-2 h-full w-full'>
-      <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] flex items-center justify-between rounded-md p-2'>
+      <div className='bg-transparent flex items-center justify-between rounded-md p-2'>
         <label
           htmlFor='my-modal-3'
-          className='bg-white/50 cursor-pointer transition ease-out hover:bg-[#e6e6e6] py-2 px-4 font-medium rounded-md text-sm uppercase tracking-widest outline-none'
+          className='bg-[#0069d9] text-white cursor-pointer transition ease-out hover:bg-[#0069d9]/50 py-2 px-4 font-medium rounded-md text-sm uppercase tracking-widest outline-none'
         >
           New Course
         </label>

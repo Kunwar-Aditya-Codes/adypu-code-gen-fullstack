@@ -14,3 +14,13 @@ export const searchCourses = async (subject: string) => {
 
   return data;
 };
+
+export const createCourse = async (inputData: any) => {
+  const { data } = await axios.post('/courses', inputData, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return data;
+};

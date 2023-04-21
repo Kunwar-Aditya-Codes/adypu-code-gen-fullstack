@@ -12,12 +12,12 @@ const Home = () => {
         />
       </div>
 
-      <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] text-white rounded-md'>
+      <div className='bg-[#00b8a3] text-slate-900 rounded-md'>
         <h1 className='text-center  rounded-md uppercase py-3 text-2xl font-medium '>
           soe course code generator
         </h1>
 
-        <p className='text-xs tracking-wider text-slate-200 rounded-md text-justify p-3'>
+        <p className='text-sm tracking-wider text-slate-900  rounded-md text-justify p-3'>
           Subject code generator app is a tool designed to simplify the process
           of generating subject codes for educational institutions. It allows
           administrators and teachers to quickly create unique codes for each
@@ -31,7 +31,7 @@ const Home = () => {
       </div>
 
       <Link to='/student'>
-        <button className='bg-white/70 uppercase tracking-widest font-medium px-8 py-3 hover:bg-[#901464] transition ease-out duration-[250ms] hover:text-white text-lg text-center rounded-md'>
+        <button className='bg-white/70 uppercase tracking-widest font-medium px-8 py-3 hover:bg-[#00b8a3] transition ease-out duration-[250ms] hover:text-white text-lg text-center rounded-md'>
           Login
         </button>
       </Link>

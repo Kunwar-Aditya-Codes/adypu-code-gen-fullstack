@@ -12,20 +12,25 @@ type Props = {
 };
 const CourseTable = ({ courses }: Props) => {
   return (
-    <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] p-2 mt-8 rounded-md '>
-      <table className='table w-full text-center'>
+    <div className='mt-4 '>
+      <table className='w-full table-auto text-center'>
         <thead className=''>
-          <tr className='border-b-4 border-white'>
-            <th className='px-4 py-4 md:text-base tracking-wide'>Code</th>
+          <tr className='bg-[#00b8a3] text-white'>
+            <th className='px-4 py-4 md:text-base tracking-wide '>Code</th>
             <th className='px-4 py-4 md:text-base tracking-wide'>Subject</th>
             <th className='px-4 py-4 md:text-base tracking-wide'>Branch</th>
             <th className='px-4 py-4 md:text-base tracking-wide'>Year</th>
-            <th className='px-4 py-4 md:text-base tracking-wide'>Semester</th>
+            <th className='px-4 py-4 md:text-base tracking-wide  '>Semester</th>
           </tr>
+        </thead>
 
+        <tbody className=''>
           {courses.map((course) => (
-            <tr key={course._id} className=''>
-              <td className='px-4 py-2 md:text-base font-normal'>
+            <tr
+              key={course._id}
+              className=' bg-[#f5fcfb] odd:bg-slate-200 text-black '
+            >
+              <td className='px-4 py-2 md:text-base   font-normal'>
                 {course.code}
               </td>
               <td className='px-4 py-2 md:text-base font-normal'>
@@ -42,7 +47,7 @@ const CourseTable = ({ courses }: Props) => {
               </td>
             </tr>
           ))}
-        </thead>
+        </tbody>
       </table>
     </div>
   );

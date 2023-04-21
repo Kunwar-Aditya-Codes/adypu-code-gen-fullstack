@@ -19,7 +19,7 @@ const StudentDashboard = () => {
 
   return (
     <div className='glassmorph p-2 h-full flex flex-col w-full'>
-      <div className='bg-gradient-to-r from-[#690f49] to-[#b5197e] flex items-center justify-end rounded-md p-2'>
+      <div className='bg-transparent flex items-center justify-end rounded-md p-2'>
         <button
           onClick={logout}
           className='bg-white/50 transition ease-out hover:bg-[#e6e6e6] p-2 rounded-full'

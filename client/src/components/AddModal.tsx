@@ -1,8 +1,20 @@
 // import { useQuery } from '@tanstack/react-query';
 // import { useDebounce } from 'use-debounce';
 // import { searchCourses } from '../api/queries';
+// const [debouncedInputData] = useDebounce(inputData.subject, 750);
+// const { data } = useQuery(
+//   ['searchCourses', debouncedInputData],
+//   () => searchCourses(debouncedInputData),
+//   {
+//     enabled: debouncedInputData.length > 2,
+//   }
+// );
+
 import { useEffect, useState } from 'react';
 import { initials, semester } from '../utils/data';
+import { createCourse } from '../api/queries';
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../api/queryClient';
 
 const AddModal = ({ course }: any) => {
   const [inputData, setInputData] = useState({
@@ -14,17 +26,29 @@ const AddModal = ({ course }: any) => {
     code: '',
   });
 
+  const mutation = useMutation({
+    mutationFn: createCourse,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['courses'],
+      });
+
+      setInputData({
+        branch: '',
+        year: '',
+        program: '',
+        semester: '',
+        subject: '',
+        code: '',
+      });
+    },
+
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const [searchFilteredData, setSearchFilteredData] = useState<any>([]);
-
-  // const [debouncedInputData] = useDebounce(inputData.subject, 750);
-
-  // const { data } = useQuery(
-  //   ['searchCourses', debouncedInputData],
-  //   () => searchCourses(debouncedInputData),
-  //   {
-  //     enabled: debouncedInputData.length > 2,
-  //   }
-  // );
 
   // Handle Input Change
   const handleInputChange = (
@@ -71,14 +95,13 @@ const AddModal = ({ course }: any) => {
     setInputData((prev) => ({ ...prev, code }));
   };
 
-  //* NEW ADDITION: Filter Data
+  // Filter Data
   const filterSearchData = () => {
     const filteredData = course?.filter((course: any) =>
       course.subject.toLowerCase().includes(inputData.subject.toLowerCase())
     );
 
     setSearchFilteredData(filteredData);
-    console.log(filteredData);
   };
   useEffect(() => {
     if (inputData.subject.length > 0) {
@@ -88,8 +111,18 @@ const AddModal = ({ course }: any) => {
     }
   }, [inputData.subject]);
 
-  //! TODO: Handle Submit
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {};
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const { branch, year, program, semester, subject, code } = inputData;
+
+    if (!branch || !year || !program || !semester || !subject || !code) {
+      alert('Please fill all the fields');
+      return;
+    }
+
+    mutation.mutate(inputData);
+  };
 
   return (
     <div>
@@ -98,18 +131,18 @@ const AddModal = ({ course }: any) => {
         <div className='modal-box rounded-md relative'>
           <label
             htmlFor='my-modal-3'
-            className='btn btn-sm btn-circle bg-[#b5197e]  border-none absolute right-2 top-2'
+            className='btn btn-sm btn-circle bg-[#00b8a3] border-none absolute right-2 top-2'
           >
             ✕
           </label>
 
-          <form className='mt-8 space-y-6'>
+          <form onSubmit={handleSubmit} className='mt-8 space-y-6'>
             {/* Program */}
             <select
               onChange={handleInputChange}
               name='program'
               value={inputData.program || 'selected'}
-              className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
+              className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
             >
               <option disabled value='selected'>
                 Select Program
@@ -123,7 +156,7 @@ const AddModal = ({ course }: any) => {
               onChange={handleInputChange}
               name='branch'
               value={inputData.branch || 'selected'}
-              className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
+              className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
             >
               <option disabled value='selected'>
                 Select Branch
@@ -140,7 +173,7 @@ const AddModal = ({ course }: any) => {
               onChange={handleInputChange}
               name='year'
               value={inputData.year || 'selected'}
-              className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
+              className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
             >
               <option disabled value='selected'>
                 Select Year
@@ -156,7 +189,7 @@ const AddModal = ({ course }: any) => {
               onChange={handleInputChange}
               name='semester'
               value={inputData.semester || 'selected'}
-              className='select select-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
+              className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
             >
               <option disabled value='selected'>
                 Select Semester
@@ -177,13 +210,17 @@ const AddModal = ({ course }: any) => {
                 autoComplete='off'
                 value={inputData.subject}
                 placeholder='Subject Name'
-                className={`input input-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full`}
+                className={`input input-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full`}
               />
               {searchFilteredData?.length !== 0 && (
-                <div className='bg-[#a0377b] mt-1 absolute w-full top-12 divide-y text-white p-2 rounded-md max-h-[5rem] z-50 overflow-y-auto'>
+                <div className='bg-[#00b8a3] text-white mt-1 absolute w-full top-12 divide-y  p-2 rounded-md max-h-[5rem] z-50 overflow-y-auto'>
                   {searchFilteredData?.map((course: any) => (
-                    <div key={course._id} className=' py-1'>
-                      {course.subject}
+                    <div
+                      key={course._id}
+                      className=' py-1 flex items-center space-x-2 '
+                    >
+                      <p>{course.subject}</p>
+                      <span>[{course.code}]</span>
                     </div>
                   ))}
                 </div>
@@ -197,13 +234,13 @@ const AddModal = ({ course }: any) => {
                 readOnly
                 value={inputData.code}
                 placeholder='Generated Code'
-                className='input flex-[0.7] cursor-not-allowed input-bordered rounded-md focus:outline-none border-2 border-[#b5197e] w-full'
+                className='input flex-[0.7] cursor-not-allowed input-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
               />
               <button
                 type='button'
                 onClick={generateCode}
                 disabled={searchFilteredData?.length !== 0}
-                className='btn flex-[0.3] rounded-md w-full bg-[#b5197e] border-none'
+                className='btn flex-[0.3] rounded-md w-full bg-[#0069d9] border-none'
               >
                 Generate Code
               </button>
@@ -211,7 +248,7 @@ const AddModal = ({ course }: any) => {
 
             <button
               type='submit'
-              className='btn rounded-md w-full bg-[#b5197e] border-none'
+              className='btn rounded-md w-full bg-[#0069d9] border-none'
             >
               Add Course
             </button>

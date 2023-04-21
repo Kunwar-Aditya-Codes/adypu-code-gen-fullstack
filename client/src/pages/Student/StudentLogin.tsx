@@ -27,7 +27,7 @@ const StudentLogin = () => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className='flex flex-col rounded-md justify-items-center space-y-6 bg-gradient-to-r from-[#690f49] to-[#b5197e] p-4'
+        className='flex flex-col rounded-md justify-items-center space-y-6 bg-[#00b8a3] p-4'
       >
         <input
           type='email'
@@ -37,7 +37,7 @@ const StudentLogin = () => {
           placeholder='Enter student email!'
           onChange={(e) => setEmail(e.target.value)}
           autoFocus
-          className='px-2  py-3 text-white focus:border-b-2 outline-none  rounded-md bg-white/25 tracking-wide text-lg  placeholder:text-slate-200'
+          className='px-2  py-3 text-slate-900  focus:border-b-2 outline-none  rounded-md bg-white/25 tracking-wide text-lg  placeholder:text-slate-900'
         />
         <input
           type='password'
@@ -46,7 +46,7 @@ const StudentLogin = () => {
           name='password'
           onChange={(e) => setPassword(e.target.value)}
           placeholder='Enter student password!'
-          className='px-2 py-3 text-white focus:border-b-2 outline-none  rounded-md bg-white/25 tracking-wide text-lg  placeholder:text-slate-200'
+          className='px-2  py-3 text-slate-900  focus:border-b-2 outline-none  rounded-md bg-white/25 tracking-wide text-lg  placeholder:text-slate-900'
         />
 
         <button
@@ -57,7 +57,7 @@ const StudentLogin = () => {
         </button>
 
         <Link to='/' className='w-fit mx-auto'>
-          <p className=' text-sm  underline text-slate-300 underline-offset-4'>
+          <p className=' text-sm  underline text-slate-700 font-medium underline-offset-4'>
             Go to home
           </p>
         </Link>

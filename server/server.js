@@ -1,9 +1,9 @@
+require('dotenv').config();
+require('express-async-errors');
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config();
-require('express-async-errors');
-// import cors from 'cors';
+// const cors = require('cors');
 
 const courseRoute = require('./view/courseRoute');
 const authRoute = require('./view/authRoute');
@@ -19,9 +19,7 @@ app.use('/api/v1/courses', courseRoute);
 app.use('/api/v1/auth', authRoute);
 
 __dirname = path.resolve();
-
 app.use(express.static(path.join(__dirname, 'client/dist')));
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
 });
