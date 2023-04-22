@@ -3,8 +3,12 @@ import { fetchCourses } from '../../api/queries';
 import CourseTable from '../../components/CourseTable';
 import { PowerIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
+import useSearchFilter from '../../hooks/useSearchFilter';
+import { useState } from 'react';
 
 const StudentDashboard = () => {
+  const [searchInput, setSearchInput] = useState<string>('');
+
   const { isLoading, isError, data } = useQuery({
     queryKey: ['courses'],
     queryFn: fetchCourses,
@@ -17,9 +21,21 @@ const StudentDashboard = () => {
     navigate('/student');
   };
 
+  const searchFilteredData = useSearchFilter({
+    course: data?.courses,
+    searchInput,
+  });
+
   return (
     <div className='glassmorph p-2 h-full flex flex-col w-full'>
-      <div className='bg-transparent flex items-center justify-end rounded-md p-2'>
+      <div className='bg-transparent flex items-center justify-between space-x-4 rounded-md p-2'>
+        <input
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          type='text'
+          placeholder='Search Course'
+          className='bg-white/70 w-full md:w-[40%] text-black shadow-lg  rounded-md p-2 outline-none placeholder:text-slate-700'
+        />
         <button
           onClick={logout}
           className='bg-white/50 transition ease-out hover:bg-[#e6e6e6] p-2 rounded-full'
@@ -41,7 +57,9 @@ const StudentDashboard = () => {
           </h1>
         </div>
       ) : (
-        <CourseTable courses={data?.courses} />
+        <CourseTable
+          courses={searchInput === '' ? data?.courses : searchFilteredData}
+        />
       )}
     </div>
   );

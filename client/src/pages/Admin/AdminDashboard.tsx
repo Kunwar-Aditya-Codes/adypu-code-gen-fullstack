@@ -5,6 +5,7 @@ import { PowerIcon } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 import AddModal from '../../components/AddModal';
 import { useState } from 'react';
+import useSearchFilter from '../../hooks/useSearchFilter';
 
 const AdminDashboard = () => {
   const [searchInput, setSearchInput] = useState<string>('');
@@ -20,13 +21,9 @@ const AdminDashboard = () => {
     navigate('/admin');
   };
 
-  const searchFilteredData = data?.courses.filter((course: any) => {
-    const result =
-      searchInput === ''
-        ? course
-        : course.subject.toLowerCase().includes(searchInput.toLowerCase());
-
-    return result;
+  const searchFilteredData = useSearchFilter({
+    course: data?.courses,
+    searchInput,
   });
 
   return (
@@ -46,7 +43,7 @@ const AdminDashboard = () => {
             onChange={(e) => setSearchInput(e.target.value)}
             type='text'
             placeholder='Search Course'
-            className='bg-white/50 w-full md:w-[40%] text-black shadow-lg  rounded-md p-2 outline-none placeholder:text-slate-700'
+            className='bg-white/70 w-full md:w-[40%] text-black shadow-lg  rounded-md p-2 outline-none placeholder:text-slate-700'
           />
           <button
             onClick={logout}
