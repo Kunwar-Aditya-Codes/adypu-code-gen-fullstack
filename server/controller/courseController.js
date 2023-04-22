@@ -42,21 +42,20 @@ exports.getAllCourses = async (req, res) => {
 // @route   GET /api/v1/courses/search
 // @access  Public
 exports.searchCourse = async (req, res) => {
-  const { subject } = req.query;
+  const { query } = req.query;
 
-  if (!subject) {
-    return res.status(400).json({ msg: 'Please enter all fields' });
-  }
-
-  const course = await Course.find({
-    subject: { $regex: subject, $options: 'i' },
+  const courses = await Course.find({
+    $or: [
+      { branch: { $regex: query, $options: 'i' } },
+      { year: { $regex: query, $options: 'i' } },
+      { semester: { $regex: query, $options: 'i' } },
+      { subject: { $regex: query, $options: 'i' } },
+      { code: { $regex: query, $options: 'i' } },
+      { program: { $regex: query, $options: 'i' } },
+    ],
   })
     .lean()
     .exec();
 
-  if (!course) {
-    return res.status(203);
-  }
-
-  res.status(200).json({ course });
+  res.status(200).json({ courses });
 };
