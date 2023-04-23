@@ -1,14 +1,19 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.jpg';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import axios from '../../api/axios';
+import { privateAxios } from '../../api/axios';
+import useAuth from '../../hooks/useAuth';
 
 const AdminLogin = () => {
+  const { setAuth } = useAuth();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || '/admin/dashboard';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +37,7 @@ const AdminLogin = () => {
     }
 
     try {
-      const response: any = await axios('/auth/admin/login', {
+      const response: any = await privateAxios('/auth/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +49,12 @@ const AdminLogin = () => {
       });
 
       if (response?.status === 200) {
-        navigate('/admin/dashboard');
+
+        setAuth({
+          accessToken: response?.data?.accessToken,
+        });
+
+        navigate(from, { replace: true });
       }
 
       toast.success('Success', {

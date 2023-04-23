@@ -4,6 +4,7 @@ const {
   getAllCourses,
   searchCourse,
 } = require('../controller/courseController');
+const verifyJwt = require('../middleware/verifyJwt');
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.use((req, res, next) => {
   next();
 });
 
-router.route('/').post(createCourse);
+router.route('/').post(verifyJwt, createCourse);
 
 router.route('/fetch').get(getAllCourses);
 

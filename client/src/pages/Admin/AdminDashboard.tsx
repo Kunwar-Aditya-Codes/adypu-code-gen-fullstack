@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import AddModal from '../../components/AddModal';
 import { useState } from 'react';
 import useSearchFilter from '../../hooks/useSearchFilter';
+import useLogout from '../../hooks/useLogout';
 
 const AdminDashboard = () => {
   const [searchInput, setSearchInput] = useState<string>('');
@@ -16,8 +17,10 @@ const AdminDashboard = () => {
   });
 
   const navigate = useNavigate();
+  const logoutUser = useLogout();
 
   const logout = async () => {
+    await logoutUser();
     navigate('/admin');
   };
 

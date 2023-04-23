@@ -4,6 +4,12 @@ const Course = require('../model/Course');
 // @route   POST /api/v1/courses
 // @access  Private - Admin
 exports.createCourse = async (req, res) => {
+  const role = req.role;
+
+  if (role !== 'admin') {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
   const { branch, year, semester, subject, code, program } = req.body;
 
   if (!branch || !year || !semester || !subject || !code || !program) {

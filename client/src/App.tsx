@@ -5,6 +5,8 @@ import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import StudentLogin from './pages/Student/StudentLogin';
 import StudentDashboard from './pages/Student/StudentDashboard';
+import RequireAuth from './components/RequireAuth';
+import PersistLogin from './components/PersistLogin';
 
 function App() {
   return (
@@ -14,12 +16,20 @@ function App() {
 
         <Route path='admin'>
           <Route index element={<AdminLogin />} />
-          <Route path='dashboard' element={<AdminDashboard />} />
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth role={'admin'} />}>
+              <Route path='dashboard' element={<AdminDashboard />} />
+            </Route>
+          </Route>
         </Route>
 
         <Route path='student'>
           <Route index element={<StudentLogin />} />
-          <Route path='dashboard' element={<StudentDashboard />} />
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth role={'student'} />}>
+              <Route path='dashboard' element={<StudentDashboard />} />
+            </Route>
+          </Route>
         </Route>
 
         <Route

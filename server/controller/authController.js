@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const generateToken = require('../utils/generateToken');
 
 // @desc    AdminLogin
 // @route   POST /api/v1/auth/admin/login
@@ -20,25 +21,48 @@ exports.adminLogin = async (req, res) => {
   ) {
     return res.status(400).json({ msg: 'Invalid credentials' });
   }
-
-  const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET);
-
-  res.cookie('jwt', token, {});
-
-  res.status(200).json({ msg: 'Login Success!' });
+  const { accessToken, refreshToken } = generateToken('admin');
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+  });
+  return res.status(200).json({ accessToken });
 };
-
-// ! Complete Later
-// @desc    UserLogin
-// @route   POST /api/v1/auth/login
-// @access  Public
-exports.userLogin = async (req, res) => {};
 
 // @desc    Logout
 // @route   GET /api/v1/auth/logout
 // @access  Public
 exports.logout = async (req, res) => {
-  res.clearCookie();
+  const refreshToken = req.cookies.refreshToken;
 
-  return res.sendStatus(203);
+  if (!refreshToken) {
+    return res.status(203).json({ message: 'No content' });
+  }
+
+  res.clearCookie('refreshToken');
+
+  return res.status(200).json({ message: 'Logout!' });
 };
+
+// @desc    Refresh Token
+// @route   GET /api/v1/auth/refresh
+// @access  Public
+exports.refreshToken = async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    return res.status(401).json({ error: 'Unauthorized (No token found!)' });
+  }
+  const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  if (!decoded) {
+    return res.status(401).json({ error: 'Unauthorized (Invalid token!)' });
+  }
+  const { accessToken } = generateToken(decoded.role);
+  return res.status(200).json({ accessToken });
+};
+
+// @desc    UserLogin
+// @route   POST /api/v1/auth/login
+// @access  Public
+exports.userLogin = async (req, res) => {};
