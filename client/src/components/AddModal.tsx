@@ -1,22 +1,12 @@
-// import { useQuery } from '@tanstack/react-query';
-// import { useDebounce } from 'use-debounce';
-// import { searchCourses } from '../api/queries';
-// const [debouncedInputData] = useDebounce(inputData.subject, 750);
-// const { data } = useQuery(
-//   ['searchCourses', debouncedInputData],
-//   () => searchCourses(debouncedInputData),
-//   {
-//     enabled: debouncedInputData.length > 2,
-//   }
-// );
-
 import { useEffect, useState } from 'react';
 import { initials, semester } from '../utils/data';
-import { createCourse } from '../api/queries';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../api/queryClient';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 const AddModal = ({ course }: any) => {
+  const axiosPrivate = useAxiosPrivate();
+
   const [inputData, setInputData] = useState({
     branch: '',
     year: '',
@@ -27,8 +17,14 @@ const AddModal = ({ course }: any) => {
   });
 
   const mutation = useMutation({
-    mutationFn: createCourse,
-    onSuccess: (data) => {
+    mutationFn: () =>
+      axiosPrivate.post('/courses', inputData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({
         queryKey: ['courses'],
       });
@@ -43,7 +39,7 @@ const AddModal = ({ course }: any) => {
       });
     },
 
-    onError: (error) => {
+    onError: (error: any) => {
       console.log(error);
     },
   });
@@ -121,7 +117,7 @@ const AddModal = ({ course }: any) => {
       return;
     }
 
-    mutation.mutate(inputData);
+    mutation.mutate();
   };
 
   return (
