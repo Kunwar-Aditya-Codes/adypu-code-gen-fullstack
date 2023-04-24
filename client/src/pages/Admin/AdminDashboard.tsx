@@ -50,7 +50,7 @@ const AdminDashboard = () => {
           />
           <button
             onClick={logout}
-            className='bg-white/50 shadow-lg transition ease-out hover:bg-[#e6e6e6] p-2 rounded-full'
+            className='bg-white/70 shadow-lg transition ease-out hover:bg-white p-2 rounded-full'
           >
             <PowerIcon className='h-5 w-5' />
           </button>

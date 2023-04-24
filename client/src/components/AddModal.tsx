@@ -3,6 +3,7 @@ import { initials, semester } from '../utils/data';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../api/queryClient';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import toast from 'react-hot-toast';
 
 const AddModal = ({ course }: any) => {
   const axiosPrivate = useAxiosPrivate();
@@ -17,8 +18,8 @@ const AddModal = ({ course }: any) => {
   });
 
   const mutation = useMutation({
-    mutationFn: () =>
-      axiosPrivate.post('/courses', inputData, {
+    mutationFn: async () =>
+      await axiosPrivate.post('/courses', inputData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -37,10 +38,17 @@ const AddModal = ({ course }: any) => {
         subject: '',
         code: '',
       });
+
+      toast.success('Course Added Successfully!', {
+        id: 'add-course',
+      });
     },
 
     onError: (error: any) => {
       console.log(error);
+      toast.error('Error adding course!', {
+        id: 'add-course',
+      });
     },
   });
 
@@ -110,10 +118,16 @@ const AddModal = ({ course }: any) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    toast.loading('Adding Course...', {
+      id: 'add-course',
+    });
+
     const { branch, year, program, semester, subject, code } = inputData;
 
     if (!branch || !year || !program || !semester || !subject || !code) {
-      alert('Please fill all the fields');
+      toast.error('Please fill all the fields', {
+        id: 'add-course',
+      });
       return;
     }
 
@@ -133,7 +147,7 @@ const AddModal = ({ course }: any) => {
           </label>
 
           <form onSubmit={handleSubmit} className='mt-8 space-y-6'>
-            {/* Program */}
+            {/* Program - Degree */}
             <select
               onChange={handleInputChange}
               name='program'
@@ -141,13 +155,13 @@ const AddModal = ({ course }: any) => {
               className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
             >
               <option disabled value='selected'>
-                Select Program
+                Select Degree
               </option>
               <option value='B.Tech'>B.Tech</option>
               <option value='M.Tech'>M.Tech</option>
             </select>
 
-            {/* Branch */}
+            {/* Branch - Program */}
             <select
               onChange={handleInputChange}
               name='branch'
@@ -155,7 +169,7 @@ const AddModal = ({ course }: any) => {
               className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
             >
               <option disabled value='selected'>
-                Select Branch
+                Select Program
               </option>
               {initials.map((opt) => (
                 <option key={opt.name} value={opt.name}>

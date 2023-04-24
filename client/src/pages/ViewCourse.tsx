@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCourses } from '../../api/queries';
-import CourseTable from '../../components/CourseTable';
-import { PowerIcon } from '@heroicons/react/24/solid';
-import { useNavigate } from 'react-router-dom';
-import useSearchFilter from '../../hooks/useSearchFilter';
+import { fetchCourses } from '../api/queries';
+import CourseTable from '../components/CourseTable';
+import useSearchFilter from '../hooks/useSearchFilter';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const StudentDashboard = () => {
+const ViewCourse = () => {
   const [searchInput, setSearchInput] = useState<string>('');
 
   const { isLoading, isError, data } = useQuery({
@@ -14,12 +13,6 @@ const StudentDashboard = () => {
     queryFn: fetchCourses,
     refetchOnWindowFocus: false,
   });
-
-  const navigate = useNavigate();
-
-  const logout = async () => {
-    navigate('/student');
-  };
 
   const searchFilteredData = useSearchFilter({
     course: data?.courses,
@@ -36,12 +29,12 @@ const StudentDashboard = () => {
           placeholder='Search Course'
           className='bg-white/70 w-full md:w-[40%] text-black shadow-lg  rounded-md p-2 outline-none placeholder:text-slate-700'
         />
-        <button
-          onClick={logout}
-          className='bg-white/50 transition ease-out hover:bg-[#e6e6e6] p-2 rounded-full'
+        <Link
+          to='/'
+          className='bg-white/70 transition ease-out hover:bg-white p-2 rounded-md'
         >
-          <PowerIcon className='h-5 w-5' />
-        </button>
+          Back to Home
+        </Link>
       </div>
 
       {isLoading ? (
@@ -64,4 +57,4 @@ const StudentDashboard = () => {
     </div>
   );
 };
-export default StudentDashboard;
+export default ViewCourse;

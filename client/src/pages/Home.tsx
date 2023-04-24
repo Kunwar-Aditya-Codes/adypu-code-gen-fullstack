@@ -30,10 +30,11 @@ const Home = () => {
         </p>
       </div>
 
-      <Link to='/student'>
-        <button className='bg-white/70 uppercase tracking-widest font-medium px-8 py-3 hover:bg-[#00b8a3] transition ease-out duration-[250ms] hover:text-white text-lg text-center rounded-md'>
-          Login
-        </button>
+      <Link
+        to='/view-courses'
+        className='bg-white/70  transition ease-out hover:bg-white px-4 py-3 uppercase tracking-wider rounded-md'
+      >
+        View Courses
       </Link>
     </div>
   );

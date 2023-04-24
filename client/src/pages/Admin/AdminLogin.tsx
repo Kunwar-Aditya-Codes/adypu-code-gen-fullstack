@@ -49,7 +49,6 @@ const AdminLogin = () => {
       });
 
       if (response?.status === 200) {
-
         setAuth({
           accessToken: response?.data?.accessToken,
         });
@@ -103,7 +102,7 @@ const AdminLogin = () => {
 
         <button
           type='submit'
-          className='bg-white  py-3 rounded-md text-lg uppercase tracking-widest outline-none'
+          className='bg-white/70 hover:bg-white transition ease-out font-medium  py-3 rounded-md text-lg uppercase tracking-widest outline-none'
         >
           Login
         </button>
