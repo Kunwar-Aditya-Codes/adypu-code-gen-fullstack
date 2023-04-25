@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const cors = require('cors');
+const cors = require('cors');
 
 const courseRoute = require('./view/courseRoute');
 const authRoute = require('./view/authRoute');
@@ -13,23 +13,23 @@ const dbConnect = require('./utils/dbConnect');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-// app.use(
-//   cors({
-//     origin: 'http://localhost:5173',
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  })
+);
 
 dbConnect();
 
 app.use('/api/v1/courses', courseRoute);
 app.use('/api/v1/auth', authRoute);
 
-__dirname = path.resolve();
-app.use(express.static(path.join(__dirname, 'client/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-});
+// __dirname = path.resolve();
+// app.use(express.static(path.join(__dirname, 'client/dist')));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+// });
 
 mongoose.connection.once('open', () => {
   console.log('Connect to db!');

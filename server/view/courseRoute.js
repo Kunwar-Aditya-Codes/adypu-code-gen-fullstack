@@ -17,6 +17,4 @@ router.route('/').post(verifyJwt, createCourse);
 
 router.route('/fetch').get(getAllCourses);
 
-router.route('/search').get(searchCourse);
-
 module.exports = router;

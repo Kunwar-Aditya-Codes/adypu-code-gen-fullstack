@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { initials, semester } from '../utils/data';
+import { semester, collegeData } from '../utils/data';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../api/queryClient';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
@@ -15,6 +15,7 @@ const AddModal = ({ course }: any) => {
     semester: '',
     subject: '',
     code: '',
+    college: '',
   });
 
   const mutation = useMutation({
@@ -37,6 +38,7 @@ const AddModal = ({ course }: any) => {
         semester: '',
         subject: '',
         code: '',
+        college: '',
       });
 
       toast.success('Course Added Successfully!', {
@@ -72,7 +74,9 @@ const AddModal = ({ course }: any) => {
 
     const { branch, year } = inputData;
     let code: string;
-    const branchInitials = initials.find((i) => branch === i.name)?.initial;
+    const branchInitials = collegeData
+      .find((clg: any) => clg.name === inputData.college)
+      ?.prgrm.find((prgrm: any) => prgrm.name === branch)?.initial;
 
     const filteredData = course?.filter((course: any) =>
       course.code.includes(branchInitials + year)
@@ -115,6 +119,7 @@ const AddModal = ({ course }: any) => {
     }
   }, [inputData.subject]);
 
+  // Submit Handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -122,9 +127,18 @@ const AddModal = ({ course }: any) => {
       id: 'add-course',
     });
 
-    const { branch, year, program, semester, subject, code } = inputData;
+    const { branch, year, program, semester, subject, code, college } =
+      inputData;
 
-    if (!branch || !year || !program || !semester || !subject || !code) {
+    if (
+      !branch ||
+      !year ||
+      !program ||
+      !semester ||
+      !subject ||
+      !code ||
+      !college
+    ) {
       toast.error('Please fill all the fields', {
         id: 'add-course',
       });
@@ -147,7 +161,24 @@ const AddModal = ({ course }: any) => {
           </label>
 
           <form onSubmit={handleSubmit} className='mt-8 space-y-6'>
-            {/* Program - Degree */}
+            {/* College */}
+            <select
+              onChange={handleInputChange}
+              name='college'
+              value={inputData.college || 'selected'}
+              className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
+            >
+              <option disabled value='selected'>
+                Select School
+              </option>
+              {collegeData.map((college: any) => (
+                <option key={college.name} value={college.name}>
+                  {college.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Program */}
             <select
               onChange={handleInputChange}
               name='program'
@@ -157,11 +188,16 @@ const AddModal = ({ course }: any) => {
               <option disabled value='selected'>
                 Select Degree
               </option>
-              <option value='B.Tech'>B.Tech</option>
-              <option value='M.Tech'>M.Tech</option>
+              {collegeData
+                .find((college: any) => college.name === inputData.college)
+                ?.degree.map((deg: any) => (
+                  <option key={deg} value={deg}>
+                    {deg}
+                  </option>
+                ))}
             </select>
 
-            {/* Branch - Program */}
+            {/* Programs */}
             <select
               onChange={handleInputChange}
               name='branch'
@@ -171,11 +207,13 @@ const AddModal = ({ course }: any) => {
               <option disabled value='selected'>
                 Select Program
               </option>
-              {initials.map((opt) => (
-                <option key={opt.name} value={opt.name}>
-                  {opt.name}
-                </option>
-              ))}
+              {collegeData
+                .find((college: any) => college.name === inputData.college)
+                ?.prgrm?.map((pg: any) => (
+                  <option key={pg.name} value={pg.name}>
+                    {pg.name}
+                  </option>
+                ))}
             </select>
 
             {/* Year */}

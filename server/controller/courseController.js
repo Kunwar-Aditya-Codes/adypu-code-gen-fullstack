@@ -10,9 +10,17 @@ exports.createCourse = async (req, res) => {
     return res.status(401).json({ msg: 'Unauthorized' });
   }
 
-  const { branch, year, semester, subject, code, program } = req.body;
+  const { branch, year, semester, subject, code, program, college } = req.body;
 
-  if (!branch || !year || !semester || !subject || !code || !program) {
+  if (
+    !branch ||
+    !year ||
+    !semester ||
+    !subject ||
+    !code ||
+    !program ||
+    !college
+  ) {
     return res.status(400).json({ msg: 'Please enter all fields' });
   }
 
@@ -29,6 +37,7 @@ exports.createCourse = async (req, res) => {
     subject,
     program,
     code,
+    college,
   });
 
   await newCourse.save();
@@ -41,27 +50,5 @@ exports.createCourse = async (req, res) => {
 // @access  Public
 exports.getAllCourses = async (req, res) => {
   const courses = await Course.find().lean().exec();
-  res.status(200).json({ courses });
-};
-
-// @desc    Search for a course
-// @route   GET /api/v1/courses/search
-// @access  Public
-exports.searchCourse = async (req, res) => {
-  const { query } = req.query;
-
-  const courses = await Course.find({
-    $or: [
-      { branch: { $regex: query, $options: 'i' } },
-      { year: { $regex: query, $options: 'i' } },
-      { semester: { $regex: query, $options: 'i' } },
-      { subject: { $regex: query, $options: 'i' } },
-      { code: { $regex: query, $options: 'i' } },
-      { program: { $regex: query, $options: 'i' } },
-    ],
-  })
-    .lean()
-    .exec();
-
   res.status(200).json({ courses });
 };

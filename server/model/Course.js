@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema(
   {
+    college: {
+      type: String,
+    },
+
     branch: {
       type: String,
     },

@@ -7,14 +7,13 @@ type Course = {
   _id: string;
   program: string;
   createdAt: string;
+  college: string;
 };
 
 type Props = {
   courses: Course[];
 };
 const CourseTable = ({ courses }: Props) => {
-  console.log(courses);
-
   return (
     <div className='mt-4 max-h-[34rem] overflow-hidden overflow-y-scroll overflow-x-scroll'>
       <table className='w-full table-auto  max-h-[10rem] text-center'>
