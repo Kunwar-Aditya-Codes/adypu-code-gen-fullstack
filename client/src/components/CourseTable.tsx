@@ -15,7 +15,7 @@ type Props = {
 };
 const CourseTable = ({ courses }: Props) => {
   return (
-    <div className='mt-4 max-h-[34rem] overflow-hidden overflow-y-scroll overflow-x-scroll'>
+    <div className='mt-4 max-h-[30rem] md:max-h-[34rem] overflow-hidden overflow-y-scroll overflow-x-scroll'>
       <table className='w-full table-auto  max-h-[10rem] text-center'>
         <thead className=''>
           <tr className='bg-[#00b8a3] text-xs sm:text-sm text-white'>

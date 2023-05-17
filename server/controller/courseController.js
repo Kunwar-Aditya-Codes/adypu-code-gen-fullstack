@@ -10,17 +10,9 @@ exports.createCourse = async (req, res) => {
     return res.status(401).json({ msg: 'Unauthorized' });
   }
 
-  const { branch, year, semester, subject, code, program, college } = req.body;
+  const { branch, year, semester, subject, code, program } = req.body;
 
-  if (
-    !branch ||
-    !year ||
-    !semester ||
-    !subject ||
-    !code ||
-    !program ||
-    !college
-  ) {
+  if (!branch || !year || !semester || !subject || !code || !program) {
     return res.status(400).json({ msg: 'Please enter all fields' });
   }
 
@@ -37,7 +29,6 @@ exports.createCourse = async (req, res) => {
     subject,
     program,
     code,
-    college,
   });
 
   await newCourse.save();

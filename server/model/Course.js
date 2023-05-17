@@ -4,6 +4,7 @@ const courseSchema = new mongoose.Schema(
   {
     college: {
       type: String,
+      default: 'School of Engineering',
     },
 
     branch: {

@@ -15,7 +15,6 @@ const AddModal = ({ course }: any) => {
     semester: '',
     subject: '',
     code: '',
-    college: '',
   });
 
   const mutation = useMutation({
@@ -38,7 +37,6 @@ const AddModal = ({ course }: any) => {
         semester: '',
         subject: '',
         code: '',
-        college: '',
       });
 
       toast.success('Course Added Successfully!', {
@@ -74,9 +72,9 @@ const AddModal = ({ course }: any) => {
 
     const { branch, year } = inputData;
     let code: string;
-    const branchInitials = collegeData
-      .find((clg: any) => clg.name === inputData.college)
-      ?.prgrm.find((prgrm: any) => prgrm.name === branch)?.initial;
+    const branchInitials = collegeData?.prgrm.find(
+      (prgrm: any) => prgrm.name === branch
+    )?.initial;
 
     const filteredData = course?.filter((course: any) =>
       course.code.includes(branchInitials + year)
@@ -127,18 +125,9 @@ const AddModal = ({ course }: any) => {
       id: 'add-course',
     });
 
-    const { branch, year, program, semester, subject, code, college } =
-      inputData;
+    const { branch, year, program, semester, subject, code } = inputData;
 
-    if (
-      !branch ||
-      !year ||
-      !program ||
-      !semester ||
-      !subject ||
-      !code ||
-      !college
-    ) {
+    if (!branch || !year || !program || !semester || !subject || !code) {
       toast.error('Please fill all the fields', {
         id: 'add-course',
       });
@@ -161,23 +150,6 @@ const AddModal = ({ course }: any) => {
           </label>
 
           <form onSubmit={handleSubmit} className='mt-8 space-y-6'>
-            {/* College */}
-            <select
-              onChange={handleInputChange}
-              name='college'
-              value={inputData.college || 'selected'}
-              className='select select-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
-            >
-              <option disabled value='selected'>
-                Select School
-              </option>
-              {collegeData.map((college: any) => (
-                <option key={college.name} value={college.name}>
-                  {college.name}
-                </option>
-              ))}
-            </select>
-
             {/* Program */}
             <select
               onChange={handleInputChange}
@@ -188,13 +160,11 @@ const AddModal = ({ course }: any) => {
               <option disabled value='selected'>
                 Select Degree
               </option>
-              {collegeData
-                .find((college: any) => college.name === inputData.college)
-                ?.degree.map((deg: any) => (
-                  <option key={deg} value={deg}>
-                    {deg}
-                  </option>
-                ))}
+              {collegeData?.degree.map((deg: any) => (
+                <option key={deg} value={deg}>
+                  {deg}
+                </option>
+              ))}
             </select>
 
             {/* Programs */}
@@ -207,13 +177,11 @@ const AddModal = ({ course }: any) => {
               <option disabled value='selected'>
                 Select Program
               </option>
-              {collegeData
-                .find((college: any) => college.name === inputData.college)
-                ?.prgrm?.map((pg: any) => (
-                  <option key={pg.name} value={pg.name}>
-                    {pg.name}
-                  </option>
-                ))}
+              {collegeData?.prgrm?.map((pg: any) => (
+                <option key={pg.name} value={pg.name}>
+                  {pg.name}
+                </option>
+              ))}
             </select>
 
             {/* Year */}
@@ -257,7 +225,7 @@ const AddModal = ({ course }: any) => {
                 name='subject'
                 autoComplete='off'
                 value={inputData.subject}
-                placeholder='Subject Name'
+                placeholder='Course Name'
                 className={`input input-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full`}
               />
               {searchFilteredData?.length !== 0 && (
