@@ -77,6 +77,7 @@ const AdminDashboard = () => {
               ? searchFilteredData
               : data?.courses
           }
+          isAdmin={true}
         />
       )}
 

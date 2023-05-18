@@ -1,3 +1,8 @@
+import { useMutation } from '@tanstack/react-query';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { queryClient } from '../api/queryClient';
+import { toast } from 'react-hot-toast';
+
 type Course = {
   branch: string;
   code: string;
@@ -12,8 +17,44 @@ type Course = {
 
 type Props = {
   courses: Course[];
+  isAdmin: boolean;
 };
-const CourseTable = ({ courses }: Props) => {
+const CourseTable = ({ courses, isAdmin }: Props) => {
+  const axiosPrivate = useAxiosPrivate();
+
+  const mutation = useMutation({
+    mutationFn: async (id: string) =>
+      await axiosPrivate.delete(`/courses`, {
+        data: {
+          id,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ['courses'],
+      });
+
+      toast.success('Course Deleted Successfully!', {
+        id: 'delete-course',
+      });
+    },
+
+    onError: (error: any) => {
+      console.log(error);
+      toast.error('Error deleting course!', {
+        id: 'delete-course',
+      });
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    mutation.mutate(id);
+  };
+
   return (
     <div className='mt-4 max-h-[30rem] md:max-h-[34rem] overflow-hidden overflow-y-scroll overflow-x-scroll'>
       <table className='w-full table-auto  max-h-[10rem] text-center'>
@@ -27,6 +68,9 @@ const CourseTable = ({ courses }: Props) => {
               Course Code
             </th>
             <th className='px-4 py-4 md:text-base tracking-wide'>Year-Sem</th>
+            {isAdmin && (
+              <th className='px-4 py-4 md:text-base tracking-wide'>Action</th>
+            )}
           </tr>
         </thead>
 
@@ -65,6 +109,16 @@ const CourseTable = ({ courses }: Props) => {
               <td className='px-4 py-2 md:text-base font-normal'>
                 {course.year} year - {course.semester} sem
               </td>
+              {isAdmin && (
+                <td className='px-4 py-2 md:text-base font-normal'>
+                  <button
+                    onClick={() => handleDelete(course._id)}
+                    className='bg-red-500 text-white px-2 py-1 rounded-md'
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

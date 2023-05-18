@@ -52,6 +52,7 @@ const ViewCourse = () => {
       ) : (
         <CourseTable
           courses={searchInput === '' ? data?.courses : searchFilteredData}
+          isAdmin={false}
         />
       )}
     </div>

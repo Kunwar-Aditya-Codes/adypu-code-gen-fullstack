@@ -70,32 +70,53 @@ const AddModal = ({ course }: any) => {
       return;
     }
 
-    const { branch, year } = inputData;
-    let code: string;
+    const { branch, year, program } = inputData;
+
     const branchInitials = collegeData?.prgrm.find(
       (prgrm: any) => prgrm.name === branch
     )?.initial;
 
-    const filteredData = course?.filter((course: any) =>
-      course.code.includes(branchInitials + year)
-    );
+    let code: string;
 
-    const codeInDb =
-      filteredData.length > 0 && filteredData.map((course: any) => course.code);
+    if (
+      (program === 'M.Tech' || program === 'MCA') &&
+      (year === '1' || year === '2')
+    ) {
+      code = `${branchInitials}${parseInt(year) + 5}00E`;
+    } else {
+      code = `${branchInitials}${year}00E`;
+    }
+
+    const filteredData = course?.filter((course: any) => {
+      if (
+        (program === 'M.Tech' || program === 'MCA') &&
+        (year === '1' || year === '2')
+      ) {
+        return course.code.includes(`${branchInitials}${parseInt(year) + 5}`);
+      } else {
+        return course.code.includes(branchInitials + year);
+      }
+    });
+
+    const codeInDb = filteredData?.map((course: any) => course.code);
+
+    if (!codeInDb || codeInDb.length === 0) {
+      setInputData((prev) => ({ ...prev, code }));
+      return;
+    }
 
     const lastCode = codeInDb && codeInDb[codeInDb.length - 1];
 
-    if (lastCode === false) {
-      code = `${branchInitials}${year}00E`;
+    const num = parseInt(lastCode.slice(3, 5)) + 1;
+    const numWithZeroes = num.toString().padStart(2, '0');
+
+    if (
+      (program === 'M.Tech' || program === 'MCA') &&
+      (year === '1' || year === '2')
+    ) {
+      code = `${branchInitials}${parseInt(year) + 5}${numWithZeroes}E`;
     } else {
-      const num = parseInt(lastCode.slice(3, 5)) + 1;
-      let numWithZeroes = num.toString();
-      if (numWithZeroes.length > 1) {
-        code = `${branchInitials}${year}${numWithZeroes}E`;
-      } else {
-        numWithZeroes = numWithZeroes.padStart(2, '0');
-        code = `${branchInitials}${year}${numWithZeroes}E`;
-      }
+      code = `${branchInitials}${year}${numWithZeroes}E`;
     }
 
     setInputData((prev) => ({ ...prev, code }));
@@ -109,6 +130,7 @@ const AddModal = ({ course }: any) => {
 
     setSearchFilteredData(filteredData);
   };
+
   useEffect(() => {
     if (inputData.subject.length > 0) {
       filterSearchData();
@@ -250,7 +272,7 @@ const AddModal = ({ course }: any) => {
                 readOnly
                 value={inputData.code}
                 placeholder='Generated Code'
-                className='input flex-[0.7] cursor-not-allowed input-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
+                className='input flex-[0.7] cursor-text input-bordered rounded-md focus:outline-none border-2 border-[#00b8a3] w-full'
               />
               <button
                 type='button'

@@ -2,7 +2,7 @@ const express = require('express');
 const {
   createCourse,
   getAllCourses,
-  searchCourse,
+  deleteCourse,
 } = require('../controller/courseController');
 const verifyJwt = require('../middleware/verifyJwt');
 
@@ -13,7 +13,7 @@ router.use((req, res, next) => {
   next();
 });
 
-router.route('/').post(verifyJwt, createCourse);
+router.route('/').post(verifyJwt, createCourse).delete(verifyJwt, deleteCourse);
 
 router.route('/fetch').get(getAllCourses);
 
